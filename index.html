@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instituto Realize - Calendário Editorial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo">Instituto Realize</h1>
+                    <p class="subtitle">Calendário Editorial</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Dashboard Header -->
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h2>Dashboard</h2>
+                        <p>Gerencie seus projetos e publicações</p>
+                    </div>
+                    <button class="btn btn--primary btn--lg" id="createProjectBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Criar Novo Projeto
+                    </button>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select id="statusFilter" class="form-control">
+                            <option value="">Todos os Status</option>
+                            <option value="Em Briefing">Em Briefing</option>
+                            <option value="Em Execução">Em Execução</option>
+                            <option value="Parado">Parado</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Postado">Postado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="institutionFilter" class="form-label">Instituição</label>
+                        <select id="institutionFilter" class="form-control">
+                            <option value="">Todas as Instituições</option>
+                            <option value="Instituto Realize">Instituto Realize</option>
+                            <option value="APJ - Associação Política Jovem">APJ - Associação Política Jovem</option>
+                            <option value="CRIAR - Coletivo Renovação">CRIAR - Coletivo Renovação</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="responsibleFilter" class="form-label">Responsável</label>
+                        <select id="responsibleFilter" class="form-control">
+                            <option value="">Todos os Responsáveis</option>
+                            <option value="Rodrigo">Rodrigo</option>
+                            <option value="Marcelo">Marcelo</option>
+                            <option value="Beto">Beto</option>
+                            <option value="Isa">Isa</option>
+                            <option value="Henrique">Henrique</option>
+                            <option value="Daniel">Daniel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- View Toggle -->
+                <div class="view-toggle">
+                    <button class="btn btn--secondary view-toggle-btn active" data-view="cards">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="9"></rect>
+                            <rect x="14" y="3" width="7" height="5"></rect>
+                            <rect x="14" y="12" width="7" height="9"></rect>
+                            <rect x="3" y="16" width="7" height="5"></rect>
+                        </svg>
+                        Cartões
+                    </button>
+                    <button class="btn btn--secondary view-toggle-btn" data-view="calendar">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Calendário
+                    </button>
+                </div>
+
+                <!-- Projects Grid -->
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Projects will be rendered here -->
+                </div>
+
+                <!-- Calendar View -->
+                <div class="calendar-view hidden" id="calendarView">
+                    <div class="calendar-header">
+                        <button class="btn btn--secondary" id="prevMonth">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <h3 id="currentMonth"></h3>
+                        <button class="btn btn--secondary" id="nextMonth">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for creating new project -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Novo Projeto</h3>
+                <button class="modal-close" id="closeModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="projectName" class="form-label">Nome do Projeto</label>
+                    <input type="text" id="projectName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDate" class="form-label">Data do Evento</label>
+                    <input type="date" id="projectDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectLocation" class="form-label">Local</label>
+                    <input type="text" id="projectLocation" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectInstitution" class="form-label">Instituição</label>
+                    <select id="projectInstitution" class="form-control" required>
+                        <option value="">Selecione uma instituição</option>
+                        <option value="Instituto Realize">Instituto Realize</option>
+                        <option value="APJ - Associação Política Jovem">APJ - Associação Política Jovem</option>
+                        <option value="CRIAR - Coletivo Renovação">CRIAR - Coletivo Renovação</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Responsáveis</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Rodrigo">
+                            <span>Rodrigo - Diretor de Marketing e Comunicação</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Marcelo">
+                            <span>Marcelo - Assistente de Mídias Sociais</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Beto">
+                            <span>Beto - Diretor de Arte e Motion Designer</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Isa">
+                            <span>Isa - Jornalista - Relações Públicas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Henrique">
+                            <span>Henrique - Gestor Geral</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="responsible" value="Daniel">
+                            <span>Daniel - Gestor Geral</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription" class="form-label">Descrição</label>
+                    <textarea id="projectDescription" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn--secondary" id="cancelProject">Cancelar</button>
+                    <button type="submit" class="btn btn--primary">Criar Projeto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for project details -->
+    <div class="modal" id="projectDetailsModal">
+        <div class="modal-content modal-content--large">
+            <div class="modal-header">
+                <h3 id="projectDetailsTitle"></h3>
+                <button class="modal-close" id="closeDetailsModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="project-details-header">
+                    <div class="project-info">
+                        <p><strong>Data:</strong> <span id="projectDetailsDate"></span></p>
+                        <p><strong>Local:</strong> <span id="projectDetailsLocation"></span></p>
+                        <p><strong>Instituição:</strong> <span id="projectDetailsInstitution"></span></p>
+                        <p><strong>Responsáveis:</strong> <span id="projectDetailsResponsible"></span></p>
+                    </div>
+                    <button class="btn btn--primary" id="addPostBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Adicionar Post
+                    </button>
+                </div>
+                <div class="posts-section">
+                    <h4>Posts do Projeto</h4>
+                    <div id="postsList">
+                        <!-- Posts will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for post creation/editing -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="postModalTitle">Adicionar Post</h3>
+                <button class="modal-close" id="closePostModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="postTitle" class="form-label">Título</label>
+                    <input type="text" id="postTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="postType" class="form-label">Tipo de Post</label>
+                    <select id="postType" class="form-control" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="Teaser">Teaser</option>
+                        <option value="Inscrições">Inscrições</option>
+                        <option value="Countdown">Countdown</option>
+                        <option value="Evento">Evento</option>
+                        <option value="Pós-evento">Pós-evento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="postDescription" class="form-label">Legenda</label>
+                    <textarea id="postDescription" class="form-control" rows="6"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="postStatus" class="form-label">Status</label>
+                    <select id="postStatus" class="form-control" required>
+                        <option value="Em Briefing">Em Briefing</option>
+                        <option value="Em Execução">Em Execução</option>
+                        <option value="Parado">Parado</option>
+                        <option value="Cancelado">Cancelado</option>
+                        <option value="Postado">Postado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="postResponsible" class="form-label">Responsável</label>
+                    <select id="postResponsible" class="form-control" required>
+                        <option value="">Selecione um responsável</option>
+                        <option value="Rodrigo">Rodrigo</option>
+                        <option value="Marcelo">Marcelo</option>
+                        <option value="Beto">Beto</option>
+                        <option value="Isa">Isa</option>
+                        <option value="Henrique">Henrique</option>
+                        <option value="Daniel">Daniel</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn--secondary" id="cancelPost">Cancelar</button>
+                    <button type="submit" class="btn btn--primary">Salvar Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
